@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://77ril0knxcm8"]
+
+[node name="Browse" type="VSeparator"]
+offset_right = 410.0
+offset_bottom = 240.0
+metadata/_tab_index = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextEdit" type="RichTextLabel" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "TestNode"
