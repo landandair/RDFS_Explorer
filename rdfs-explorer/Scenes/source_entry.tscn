@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ch8gp650lrajs"]
+
+[node name="Source_Entry" type="HBoxContainer"]
+
+[node name="TextEdit" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TestNode test"
+fit_content = true
+autowrap_mode = 0
+
+[node name="CheckBox" type="CheckBox" parent="."]
+layout_mode = 2
+text = "favorite"
+alignment = 1

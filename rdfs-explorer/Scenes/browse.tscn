@@ -1,22 +1,58 @@
-[gd_scene format=3 uid="uid://77ril0knxcm8"]
+[gd_scene load_steps=2 format=3 uid="uid://77ril0knxcm8"]
 
-[node name="Browse" type="VSeparator"]
-offset_right = 410.0
-offset_bottom = 240.0
+[ext_resource type="PackedScene" uid="uid://ch8gp650lrajs" path="res://Scenes/source_entry.tscn" id="1_tdqe8"]
+
+[node name="Browse" type="HSplitContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+drag_area_highlight_in_editor = true
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="Source tab" type="ScrollContainer" parent="."]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+follow_focus = true
+draw_focus_border = true
+horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Source_Display" type="VBoxContainer" parent="Source tab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Source_Entry" parent="Source tab/Source_Display" instance=ExtResource("1_tdqe8")]
+layout_mode = 2
+
+[node name="file_view" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="Search_Bar" type="HBoxContainer" parent="file_view"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Button" type="Button" parent="file_view/Search_Bar"]
+layout_mode = 2
+text = "Search"
+
+[node name="HSeparator" type="HSeparator" parent="file_view"]
+layout_mode = 2
+
+[node name="file_browse" type="HBoxContainer" parent="file_view"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="Tree" type="Tree" parent="file_view/file_browse"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="TextEdit" type="RichTextLabel" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Info" type="Control" parent="file_view/file_browse"]
+visible = false
 layout_mode = 2
-text = "TestNode"
