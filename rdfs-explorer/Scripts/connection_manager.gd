@@ -19,18 +19,89 @@ func _ready() -> void:
 			await get_tree().process_frame
 			
 		assert(http.get_status() == HTTPClient.STATUS_CONNECTED)
-		self.remove_node('1234')
+
 
 func _process(delta: float) -> void:
 	http.poll()
 	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED:
 		http.connect_to_host(host, port)
 
+# Request root node json data
+func get_root() -> void:
+	var res = self.make_req('/')
+	if res == OK:
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
+
+
+# Make an http form and send it to the http peer for upload for uploading a file
+func upload_data(file_name: String, file_data: PackedByteArray, parent: String) -> void:
+	# Load the buffer into a form data
+	var bound_head = self.make_multipart_header()
+	var boundary = bound_head[0]
+	var headers = bound_head[1]
+	# Create our body
+	var body = PackedByteArray()
+	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
+	append_line(body, 'Content-Disposition: form-data; name="parent"')
+	append_line(body, '')
+	append_line(body, parent) # The API key you have
+	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
+	append_line(body, 'Content-Disposition: form-data; name="file"; filename="{file_name}"'.format({"file_name": file_name}))
+	append_line(body, 'Content-Type: file')
+	append_line(body, 'Content-Transfer-Encoding: binary')
+	append_line(body, '')
+	append_bytes(body, file_data)
+	append_line(body, "--{{boundary}}--".format({"boundary": boundary}, "{{_}}"))
+	body = body.get_string_from_utf8()
+	var res = self.make_post('/uploadData', headers, body)
+	if res == OK:
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
+# Make http post to make a directory
+func make_directory(name, parent: String) -> void:
+		# Load the buffer into a form data
+	var bound_head = self.make_multipart_header()
+	var boundary = bound_head[0]
+	var headers = bound_head[1]
+	# Create our body
+	var body = PackedByteArray()
+	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
+	append_line(body, 'Content-Disposition: form-data; name="parent"')
+	append_line(body, '')
+	append_line(body, parent) # The API key you have
+	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
+	append_line(body, 'Content-Disposition: form-data; name="name"')
+	append_line(body, '')
+	append_line(body, name)
+	append_line(body, "--{{boundary}}--".format({"boundary": boundary}, "{{_}}"))
+	body = body.get_string_from_utf8()
+	var res = self.make_post('/mkdir', headers, body)
+	if res == OK:
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
+# Make http request to remove a node
+func remove_node(id: String) -> void:
+	print('/deleteNode/%s' % id)
+	var res = self.make_req('/deleteNode/%s' % id)
+	if res == OK:
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
+## HELPER FUNCTIONS
+
 func make_req(url, header=['Content-type: json'], body='') -> Error:
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
 		return http.request(HTTPClient.METHOD_GET, url, header, body)
 	return ERR_CANT_CONNECT
 
+func make_post(url, header=['Content-type: json'], body='') -> Error:
+	if http.get_status() == HTTPClient.STATUS_CONNECTED:
+		return http.request(HTTPClient.METHOD_POST, url, header, body)
+	return ERR_CANT_CONNECT
 
 func get_response_body() -> PackedByteArray:
 	while http.get_status() == HTTPClient.STATUS_REQUESTING:
@@ -42,19 +113,6 @@ func get_response_body() -> PackedByteArray:
 		var headers = http.get_response_headers_as_dictionary() # Get response headers.
 		#print("code: ", http.get_response_code()) # Show response code.
 		#print("**headers:\\n", headers) # Show headers.
-#
-		## Getting the HTTP Body
-		#if http.is_response_chunked():
-			## Does it use chunks?
-			#print("Response is Chunked!")
-		#else:
-			## Or just plain Content-Length
-			#var bl = http.get_response_body_length()
-			#print("Response Length: ", bl)
-
-		# This method works for both anyway
-
-
 		while http.get_status() == HTTPClient.STATUS_BODY:
 			# While there is body left to be read
 			http.poll()
@@ -68,30 +126,7 @@ func get_response_body() -> PackedByteArray:
 		var text = rb.get_string_from_ascii()
 	return rb
 
-# Request root node json data
-func get_root() -> void:
-	var res = self.make_req('/')
-	if res == OK:
-		var bin = await self.get_response_body()
-		print(bin.get_string_from_ascii())
-
-# Make an http form and send it to the http peer for upload
-func upload_data(name: String, file_data: PackedByteArray, parent: String) -> void:
-	pass
-
-# Make http post to make a directory
-func make_directory(name, parent: String) -> void:
-	pass
-
-# Make http request to remove a node
-func remove_node(id: String) -> void:
-	print('/deleteNode/%s' % id)
-	var res = self.make_req('/deleteNode/%s' % id)
-	if res == OK:
-		var bin = await self.get_response_body()
-		print(bin.get_string_from_ascii())
-
-func send_image_binary() -> void:
+func make_multipart_header():
 	# Create some random bytes to generate our boundary value
 	var crypto = Crypto.new()
 	var random_bytes = crypto.generate_random_bytes(16)
@@ -101,24 +136,7 @@ func send_image_binary() -> void:
 	var headers = [
 		'Content-Type: multipart/form-data;boundary=%s' % boundary
 	]
-
-	# Load the image and get the png buffer
-	var image = load("res://letter.png").get_image() as Image
-	var buffer = image.save_png_to_buffer()
-
-	# Create our body
-	var body = PackedByteArray()
-	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
-	append_line(body, 'Content-Disposition: form-data; name="api_key"')
-	append_line(body, '')
-	append_line(body, "MY_API_KEY") # The API key you have
-	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
-	append_line(body, 'Content-Disposition: form-data; name="image"; filename="my_image.png"')
-	append_line(body, 'Content-Type: image/png')
-	append_line(body, 'Content-Transfer-Encoding: binary')
-	append_line(body, '')
-	append_bytes(body, buffer)
-	append_line(body, "--{{boundary}}--".format({"boundary": boundary}, "{{_}}"))
+	return [boundary, headers]
 
 func append_line(buffer:PackedByteArray, line:String) -> void:
 	buffer.append_array(line.to_utf8_buffer())
