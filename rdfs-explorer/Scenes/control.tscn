@@ -25,3 +25,8 @@ script = ExtResource("2_vh8u0")
 
 [node name="Browse" parent="TabContainer" instance=ExtResource("1_sjmnu")]
 layout_mode = 2
+
+[node name="FileDialog" type="FileDialog" parent="TabContainer"]
+access = 2
+
+[connection signal="file_selected" from="TabContainer/FileDialog" to="TabContainer" method="_on_file_dialog_file_selected"]
