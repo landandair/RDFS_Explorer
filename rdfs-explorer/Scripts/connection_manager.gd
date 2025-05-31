@@ -7,8 +7,8 @@ var port = 1234
 
 @onready var file_dialog = $FileDialog
 
-signal source_upate(source_dict: Dictionary)
-signal nodes_list(node_dict: Dictionary)
+signal source_upate(source: String)
+#signal nodes_list(node_dict: Dictionary)
 signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
@@ -23,7 +23,7 @@ func _ready() -> void:
 			await get_tree().process_frame
 			
 		assert(http.get_status() == HTTPClient.STATUS_CONNECTED)
-	get_file('3e164dcd7800653828e2844cedcca00c7495c6afd78e00a3704be852')
+	get_info('')
 
 func _process(delta: float) -> void:
 	http.poll()
@@ -40,12 +40,15 @@ func get_root() -> void:
 
 # Get info about a node from the server in json format
 func get_info(node_id: String) -> void:
+	if not node_id:
+		node_id = 'root'
 	var res = self.make_req('/getNode/{node_id}'.format({"node_id": node_id}))
 	if res == OK:
-		await self.get_headers()
+		var headers = await self.get_headers()
 		var bin = await self.get_response_body()
-		var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
-		print("Make a signal that broadcasts ", out)
+		if headers['response_code'] == HTTPClient.RESPONSE_OK:
+			var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
+			node_info_received.emit(out)
 
 # Get source information about local server to know which nodes are ours
 func get_source() -> void:
@@ -54,7 +57,7 @@ func get_source() -> void:
 		await self.get_headers()
 		var bin = await self.get_response_body()
 		var out = bin.get_string_from_utf8()
-		print("Make a signal that broadcasts ", out)
+		source_upate.emit(out)
 
 # Get file from server make a prompt to save it
 func get_file(node_id: String) -> void:
@@ -166,7 +169,9 @@ func get_headers() -> Dictionary:
 		await get_tree().process_frame
 	if http.has_response():
 		# If there is a response...
+		var code = http.get_response_code()
 		headers = http.get_response_headers_as_dictionary() # Get response headers.
+		headers['response_code'] = code
 	return headers
 
 func make_multipart_header():
