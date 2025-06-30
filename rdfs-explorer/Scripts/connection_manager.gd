@@ -202,3 +202,19 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		f.store_buffer(current_file_data)
 		f.close()
 		current_file_data = PackedByteArray()
+
+
+func _on_browse_make_directory(name: Variant, parent: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_browse_node_info_received(node_dict: Dictionary) -> void:
+	pass # Replace with function body.
+
+
+func _on_browse_remove_node(id: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_browse_upload_data(file_name: String, file_data: PackedByteArray, parent: String) -> void:
+	pass # Replace with function body.

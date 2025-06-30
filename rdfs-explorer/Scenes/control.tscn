@@ -29,4 +29,13 @@ layout_mode = 2
 [node name="FileDialog" type="FileDialog" parent="TabContainer"]
 access = 2
 
+[connection signal="node_info_received" from="TabContainer" to="TabContainer/Browse" method="_on_node_info_received"]
+[connection signal="source_upate" from="TabContainer" to="TabContainer/Browse" method="_on_source_upate"]
+[connection signal="get_file" from="TabContainer/Browse" to="TabContainer" method="get_file"]
+[connection signal="get_info" from="TabContainer/Browse" to="TabContainer" method="get_info"]
+[connection signal="get_root" from="TabContainer/Browse" to="TabContainer" method="get_root"]
+[connection signal="get_source" from="TabContainer/Browse" to="TabContainer" method="get_source"]
+[connection signal="make_directory" from="TabContainer/Browse" to="TabContainer" method="make_directory"]
+[connection signal="remove_node" from="TabContainer/Browse" to="TabContainer" method="remove_node"]
+[connection signal="upload_data" from="TabContainer/Browse" to="TabContainer" method="upload_data"]
 [connection signal="file_selected" from="TabContainer/FileDialog" to="TabContainer" method="_on_file_dialog_file_selected"]

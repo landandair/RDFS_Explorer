@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://77ril0knxcm8"]
+[gd_scene load_steps=3 format=3 uid="uid://77ril0knxcm8"]
 
 [ext_resource type="PackedScene" uid="uid://ch8gp650lrajs" path="res://Scenes/source_entry.tscn" id="1_tdqe8"]
+[ext_resource type="Script" uid="uid://h68m3o2t8t6q" path="res://Scripts/browse.gd" id="1_tife8"]
 
 [node name="Browse" type="HSplitContainer"]
 anchors_preset = 15
@@ -11,6 +12,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 drag_area_highlight_in_editor = true
+script = ExtResource("1_tife8")
 metadata/_tab_index = 0
 
 [node name="Source tab" type="ScrollContainer" parent="."]
