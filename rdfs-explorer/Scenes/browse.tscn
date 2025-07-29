@@ -75,3 +75,4 @@ layout_mode = 2
 [connection signal="make_directory" from="file_view/file_browse" to="." method="_make_directory"]
 [connection signal="remove_node" from="file_view/file_browse" to="." method="_remove_node"]
 [connection signal="upload_data" from="file_view/file_browse" to="." method="_upload_data"]
+[connection signal="button_clicked" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_button_clicked"]
