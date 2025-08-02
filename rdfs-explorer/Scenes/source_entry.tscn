@@ -1,15 +1,33 @@
-[gd_scene format=3 uid="uid://ch8gp650lrajs"]
+[gd_scene load_steps=2 format=3 uid="uid://ch8gp650lrajs"]
+
+[ext_resource type="Script" uid="uid://cgstbhdfi2uf5" path="res://Scripts/source_entry.gd" id="1_764xv"]
 
 [node name="Source_Entry" type="HBoxContainer"]
+script = ExtResource("1_764xv")
 
-[node name="TextEdit" type="RichTextLabel" parent="."]
+[node name="Name" type="RichTextLabel" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
 text = "TestNode test"
 fit_content = true
+autowrap_mode = 0
+
+[node name="Hash" type="RichTextLabel" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "TestNode test"
 autowrap_mode = 0
 
 [node name="CheckBox" type="CheckBox" parent="."]
 layout_mode = 2
 text = "favorite"
 alignment = 1
+
+[node name="Open" type="Button" parent="."]
+layout_mode = 2
+text = "Open"
+
+[connection signal="toggled" from="CheckBox" to="." method="_on_check_box_toggled"]
+[connection signal="pressed" from="Open" to="." method="_on_open_pressed"]

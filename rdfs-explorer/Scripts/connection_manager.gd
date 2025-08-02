@@ -23,7 +23,7 @@ func _ready() -> void:
 			await get_tree().process_frame
 			
 		assert(http.get_status() == HTTPClient.STATUS_CONNECTED)
-	get_info('3e06c6cf73d0a8347b8e1b7518d381ee')
+	get_info('')
 
 func _process(delta: float) -> void:
 	http.poll()

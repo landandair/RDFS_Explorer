@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://77ril0knxcm8"]
+[gd_scene load_steps=5 format=3 uid="uid://77ril0knxcm8"]
 
-[ext_resource type="PackedScene" uid="uid://ch8gp650lrajs" path="res://Scenes/source_entry.tscn" id="1_tdqe8"]
 [ext_resource type="Script" uid="uid://h68m3o2t8t6q" path="res://Scripts/browse.gd" id="1_tife8"]
 [ext_resource type="Script" uid="uid://c3avuuyysuj56" path="res://Scripts/source_tab.gd" id="2_onr6c"]
 [ext_resource type="Script" uid="uid://comi6n5ead8cb" path="res://Scripts/search_bar.gd" id="4_img7u"]
@@ -32,9 +31,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Source_Entry" parent="Source tab/Source_Display" instance=ExtResource("1_tdqe8")]
-layout_mode = 2
-
 [node name="file_view" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -60,14 +56,17 @@ script = ExtResource("5_a4nd2")
 [node name="Tree" type="Tree" parent="file_view/file_browse"]
 layout_mode = 2
 size_flags_horizontal = 3
+columns = 2
+hide_root = true
 
 [node name="Info" type="Control" parent="file_view/file_browse"]
 visible = false
 layout_mode = 2
 
+[connection signal="node_info_received" from="." to="Source tab" method="_node_info_received"]
 [connection signal="node_info_received" from="." to="file_view/file_browse" method="_on_node_info_received"]
 [connection signal="source_upate" from="." to="Source tab" method="_on_source_upate"]
-[connection signal="get_root" from="Source tab" to="." method="_get_root"]
+[connection signal="get_info" from="Source tab" to="." method="_get_info"]
 [connection signal="get_source" from="Source tab" to="." method="_get_source"]
 [connection signal="get_info" from="file_view/Search_Bar" to="." method="_get_info"]
 [connection signal="get_file" from="file_view/file_browse" to="." method="_get_file"]
@@ -76,3 +75,4 @@ layout_mode = 2
 [connection signal="remove_node" from="file_view/file_browse" to="." method="_remove_node"]
 [connection signal="upload_data" from="file_view/file_browse" to="." method="_upload_data"]
 [connection signal="button_clicked" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_button_clicked"]
+[connection signal="item_activated" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_activated"]
