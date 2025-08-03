@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc6gwr5gpggvs"]
+
+[ext_resource type="Script" uid="uid://bxvbq70pidogk" path="res://Scripts/status_item.gd" id="1_pim8o"]
+
+[node name="Status_Item" type="HBoxContainer"]
+script = ExtResource("1_pim8o")
+
+[node name="Status" type="RichTextLabel" parent="."]
+layout_mode = 2
+text = "status"
+fit_content = true
+autowrap_mode = 0
+
+[node name="VSeparator" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="Name" type="RichTextLabel" parent="."]
+layout_mode = 2
+text = "Name"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cancel" type="Button" parent="."]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="pressed" from="Cancel" to="." method="_on_cancel_pressed"]

@@ -5,7 +5,7 @@ signal open_pressed(hash: String)
 
 @export var node_name = "N/A"
 @export var is_favorite = false
-@export var hash = "N/A"
+@export var node_hash = "N/A"
 
 @onready var node_name_box = $Name
 @onready var hash_box = $Hash
@@ -13,14 +13,14 @@ signal open_pressed(hash: String)
 
 func _ready() -> void:
 	self.node_name_box.text = node_name
-	self.hash_box.text = hash
-	self.hash_box.tooltip_text = hash
+	self.hash_box.text = node_hash
+	self.hash_box.tooltip_text = node_hash
 
 
 func _on_check_box_toggled(toggled_on: bool) -> void:
 	is_favorite = toggled_on # Replace with function body.
-	favorite_toggled.emit(hash, is_favorite)
+	favorite_toggled.emit(node_hash, is_favorite)
 
 
 func _on_open_pressed() -> void:
-	open_pressed.emit(hash)
+	open_pressed.emit(node_hash)

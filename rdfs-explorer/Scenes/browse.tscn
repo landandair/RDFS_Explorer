@@ -36,14 +36,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="Search_Bar" type="HBoxContainer" parent="file_view"]
+[node name="reload_button" type="HBoxContainer" parent="file_view"]
 layout_mode = 2
 size_flags_horizontal = 8
 script = ExtResource("4_img7u")
 
-[node name="Button" type="Button" parent="file_view/Search_Bar"]
+[node name="Button" type="Button" parent="file_view/reload_button"]
 layout_mode = 2
-text = "Search"
+text = "Reload"
 
 [node name="HSeparator" type="HSeparator" parent="file_view"]
 layout_mode = 2
@@ -59,16 +59,13 @@ size_flags_horizontal = 3
 columns = 2
 hide_root = true
 
-[node name="Info" type="Control" parent="file_view/file_browse"]
-visible = false
-layout_mode = 2
-
 [connection signal="node_info_received" from="." to="Source tab" method="_node_info_received"]
 [connection signal="node_info_received" from="." to="file_view/file_browse" method="_on_node_info_received"]
 [connection signal="source_upate" from="." to="Source tab" method="_on_source_upate"]
 [connection signal="get_info" from="Source tab" to="." method="_get_info"]
 [connection signal="get_source" from="Source tab" to="." method="_get_source"]
-[connection signal="get_info" from="file_view/Search_Bar" to="." method="_get_info"]
+[connection signal="get_info" from="file_view/reload_button" to="." method="_get_info"]
+[connection signal="pressed" from="file_view/reload_button/Button" to="file_view/reload_button" method="_on_button_pressed"]
 [connection signal="get_file" from="file_view/file_browse" to="." method="_get_file"]
 [connection signal="get_info" from="file_view/file_browse" to="." method="_get_info"]
 [connection signal="make_directory" from="file_view/file_browse" to="." method="_make_directory"]
@@ -76,3 +73,4 @@ layout_mode = 2
 [connection signal="upload_data" from="file_view/file_browse" to="." method="_upload_data"]
 [connection signal="button_clicked" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_button_clicked"]
 [connection signal="item_activated" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_activated"]
+[connection signal="item_selected" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_selected"]

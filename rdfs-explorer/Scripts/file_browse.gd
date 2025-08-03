@@ -8,11 +8,13 @@ signal upload_data(file_name: String, file_data: PackedByteArray, parent: String
 signal make_directory(name, parent: String)
 signal remove_node(id: String)
 
+var current_node_dict = {}
 var tree_item_dict = {}
 var download = preload("res://icon.svg")
-var File_Entry = preload("res://Scenes/file_entry.tscn")
 @onready var tree = $Tree
 
+func _ready() -> void:
+	get_viewport().files_dropped.connect(on_files_dropped)
 # Display node info in screen
 func _on_node_info_received(node_dict: Dictionary) -> void:
 	tree.clear()
@@ -20,15 +22,16 @@ func _on_node_info_received(node_dict: Dictionary) -> void:
 	tree.set_column_expand_ratio(0, 4)
 	#base_item.set_text(0, "Files")
 	#base_item.set_text(1, "Size")
-	recursive_tree_maker(base_item, node_dict, node_dict.keys())
+	current_node_dict = node_dict
+	recursive_tree_maker(base_item, current_node_dict.keys())
 			
-func recursive_tree_maker(parent: TreeItem, node_dict: Dictionary, nodes):
-	for hash in nodes:
-		if hash in node_dict:
-			var node = node_dict.get(hash)
-			if node.get('parent') not in nodes or (node.get('parent') in tree_item_dict.values() and hash not in tree_item_dict.values()):				
+func recursive_tree_maker(parent: TreeItem, nodes):
+	for node_hash in nodes:
+		if node_hash in current_node_dict:
+			var node = current_node_dict.get(node_hash)
+			if node.get('parent') not in nodes or (node.get('parent') in tree_item_dict.values() and node_hash not in tree_item_dict.values()):				
 				var item = parent.create_child()
-				tree_item_dict[item] = hash
+				tree_item_dict[item] = node_hash
 				item.set_text(0, node.get('name'))
 				match int(node.get('type')):
 					0: # Source
@@ -40,7 +43,7 @@ func recursive_tree_maker(parent: TreeItem, node_dict: Dictionary, nodes):
 						item.set_text(1, "%d item(s)" % len(node.get('children', [])))
 					3: # Chunk
 						item.set_text(1, get_human_readable_size(node.get('size', -1)))
-				recursive_tree_maker(item, node_dict, node.get('children'))
+				recursive_tree_maker(item, node.get('children'))
 
 
 func get_human_readable_size(bytes: int) -> String:
@@ -53,15 +56,37 @@ func get_human_readable_size(bytes: int) -> String:
 	else:
 		return "%.2f GB" % (bytes / (1024.0 * 1024.0 * 1024.0))
 
-
-func _on_tree_button_clicked(item: TreeItem, column: int, id: int, mouse_button_index: int) -> void:
-	var hash = tree_item_dict[item]
-	if hash:
+# Tree button click means download or request
+func _on_tree_button_clicked(item: TreeItem, _column: int, id: int, _mouse_button_index: int) -> void:
+	var node_hash = tree_item_dict[item]
+	if node_hash:
 		if id == 0:
-			get_file.emit(hash)
+			get_file.emit(node_hash)
 
-
+# Double click request data for that node
 func _on_tree_item_activated() -> void:
-	var hash = tree_item_dict[tree.get_selected()]
-	if hash:
-		get_info.emit(hash)
+	var node_hash = tree_item_dict.get(tree.get_selected(), '')
+	if node_hash:
+		get_info.emit(node_hash)
+
+# Single click sets the Info bar to show all info
+func _on_tree_item_selected() -> void:
+	var node_hash = tree_item_dict[tree.get_selected()]
+	if node_hash:
+		var node_dict = current_node_dict[node_hash]
+
+func on_files_dropped(files):
+	var hovered_item = tree.get_item_at_position(get_local_mouse_position())
+	if not hovered_item:
+		hovered_item = tree.get_selected()
+	if hovered_item:
+		var node_hash = tree_item_dict[hovered_item]
+		if node_hash:
+			var node_dict = current_node_dict[node_hash]
+			var type = int(node_dict.get('type'))
+			if type == 0 or type == 2:  # Source or dir
+				for path in files:
+					var bytes = FileAccess.get_file_as_bytes(path)
+					print(len(bytes))
+					if bytes:
+						upload_data.emit(path.get_file(), bytes, node_hash)

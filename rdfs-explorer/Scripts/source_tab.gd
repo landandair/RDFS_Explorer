@@ -19,28 +19,28 @@ func _on_source_upate(source: String) -> void:
 
 
 func _node_info_received(node_dict: Dictionary) -> void:
-	for hash in node_dict:
-		var node = node_dict[hash]
-		if node.get('type') == 0 and hash not in found_hashes: # Check if root
-			found_hashes.append(hash)
-			var name = node.get('name')
+	for node_hash in node_dict:
+		var node = node_dict[node_hash]
+		if node.get('type') == 0 and node_hash not in found_hashes: # Check if root
+			found_hashes.append(node_hash)
+			var node_name = node.get('name')
 			var node_entry = source_entry.instantiate()
-			node_entry.node_name = name
-			node_entry.hash = hash
+			node_entry.node_name = node_name
+			node_entry.node_hash = node_hash
 			node_entry.connect('favorite_toggled', _favorite_toggled)
 			node_entry.connect('open_pressed', _open_pressed)
 			source_disp.add_child(node_entry)
 	sort_nodes()
 
-func _favorite_toggled(hash: String, is_favorite: bool):
+func _favorite_toggled(node_hash: String, is_favorite: bool):
 	if is_favorite:
-		favorites_list.append(hash)
-	elif hash in favorites_list:
-		favorites_list.erase(hash)
+		favorites_list.append(node_hash)
+	elif node_hash in favorites_list:
+		favorites_list.erase(node_hash)
 	sort_nodes()
 
-func _open_pressed(hash: String):
-	get_info.emit(hash)
+func _open_pressed(node_hash: String):
+	get_info.emit(node_hash)
 
 func sort_nodes():
 	var sorted_nodes := source_disp.get_children()
@@ -54,9 +54,9 @@ func sort_nodes():
 
 func source_entry_compare(a: Node, b: Node) -> bool:
 	# Sort nodes in list in a sensible manner
-	if a.hash == our_source:
+	if a.node_hash == our_source:
 		return true
-	elif b.hash == our_source:
+	elif b.node_hash == our_source:
 		return false
 	elif a.is_favorite:
 		return true

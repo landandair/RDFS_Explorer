@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://unuj7o6vr4ws"]
+
+[ext_resource type="Script" uid="uid://ciwrm36fvhk1o" path="res://Scripts/initial_settings.gd" id="1_6osom"]
+
+[node name="Initial_settings" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6osom")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ip" type="LineEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+placeholder_text = "IP Adress"
+alignment = 1
+
+[node name="port" type="LineEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+placeholder_text = "Port"
+alignment = 1
+
+[node name="connect" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Connect"
+
+[connection signal="text_changed" from="HBoxContainer/ip" to="." method="_on_ip_text_changed"]
+[connection signal="text_submitted" from="HBoxContainer/ip" to="." method="_on_text_submitted"]
+[connection signal="text_changed" from="HBoxContainer/port" to="." method="_on_port_text_changed"]
+[connection signal="text_submitted" from="HBoxContainer/port" to="." method="_on_text_submitted"]
+[connection signal="pressed" from="HBoxContainer/connect" to="." method="_on_connect_pressed"]

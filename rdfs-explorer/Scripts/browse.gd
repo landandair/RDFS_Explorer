@@ -29,8 +29,8 @@ func _get_file(node_id: String):
 func _upload_data(file_name: String, file_data: PackedByteArray, parent: String):
 	upload_data.emit(file_name, file_data, parent)
 
-func _make_directory(name, parent: String):
-	make_directory.emit(name, parent)
+func _make_directory(node_name, parent: String):
+	make_directory.emit(node_name, parent)
 
 func _remove_node(id: String):
 	remove_node.emit(id)

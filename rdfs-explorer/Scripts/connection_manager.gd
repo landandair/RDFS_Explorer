@@ -2,18 +2,21 @@ extends TabContainer
 # Manage all api calls by signals and return those values through update signals
 
 var http = HTTPClient.new()
-var host = '127.0.0.1'
-var port = 1234
+@export var host = '127.0.0.1'
+@export var port = 1234
 
 @onready var file_dialog = $FileDialog
 
 signal source_upate(source: String)
+signal status_update(status_dict: Dictionary)
 #signal nodes_list(node_dict: Dictionary)
 signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
 
-func _ready() -> void:
+func http_connect(ip: String, port: int) -> bool:
+	if ip:
+		host = ip
 	var err = http.connect_to_host(host, port)
 	if err == OK:
 		print('Connected to host')
@@ -22,12 +25,15 @@ func _ready() -> void:
 			print("Connecting...")
 			await get_tree().process_frame
 			
-		assert(http.get_status() == HTTPClient.STATUS_CONNECTED)
-	get_info('')
+	if http.get_status() == HTTPClient.STATUS_CONNECTED:
+		get_info('')
+		self.show()
+		return true
+	return false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	http.poll()
-	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED:
+	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.METHOD_DELETE:
 		http.connect_to_host(host, port)
 
 # Request root node json data
@@ -60,6 +66,15 @@ func get_source() -> void:
 		var out = bin.get_string_from_utf8()
 		source_upate.emit(out)
 
+# Return a dictionary of the status of nodes being requested
+func get_status() -> void:
+	var res = make_req('/getStatus')
+	if res == OK:
+		await self.get_headers()
+		var bin = await self.get_response_body()
+		var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
+		status_update.emit(out)
+
 # Get file from server make a prompt to save it
 func get_file(node_id: String) -> void:
 	var res = self.make_req('/getFile/{node_id}'.format({"node_id": node_id}))
@@ -90,9 +105,9 @@ func upload_data(file_name: String, file_data: PackedByteArray, parent: String) 
 	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
 	append_line(body, 'Content-Disposition: form-data; name="file"; filename="{file_name}"'.format({"file_name": file_name}))
 	append_line(body, 'Content-Type: file')
-	append_line(body, 'Content-Transfer-Encoding: binary')
+	append_line(body, 'Content-Transfer-Encoding: base64')
 	append_line(body, '')
-	append_bytes(body, file_data)
+	append_line(body, Marshalls.raw_to_base64(file_data))
 	append_line(body, "--{{boundary}}--".format({"boundary": boundary}, "{{_}}"))
 	body = body.get_string_from_utf8()
 	var res = self.make_post('/uploadData', headers, body)
@@ -102,7 +117,7 @@ func upload_data(file_name: String, file_data: PackedByteArray, parent: String) 
 		print(bin.get_string_from_ascii())
 
 # Make http post to make a directory
-func make_directory(name, parent: String) -> void:
+func make_directory(node_name, parent: String) -> void:
 		# Load the buffer into a form data
 	var bound_head = self.make_multipart_header()
 	var boundary = bound_head[0]
@@ -116,7 +131,7 @@ func make_directory(name, parent: String) -> void:
 	append_line(body, "--{{boundary}}".format({"boundary": boundary}, "{{_}}"))
 	append_line(body, 'Content-Disposition: form-data; name="name"')
 	append_line(body, '')
-	append_line(body, name)
+	append_line(body, node_name)
 	append_line(body, "--{{boundary}}--".format({"boundary": boundary}, "{{_}}"))
 	body = body.get_string_from_utf8()
 	var res = self.make_post('/mkdir', headers, body)
@@ -160,7 +175,7 @@ func get_response_body() -> PackedByteArray:
 		else:
 			rb = rb + chunk # Append to read buffer.
 		# Done!
-		var text = rb.get_string_from_ascii()
+		var _text = rb.get_string_from_ascii()
 	return rb
 
 func get_headers() -> Dictionary:
@@ -203,19 +218,3 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		f.store_buffer(current_file_data)
 		f.close()
 		current_file_data = PackedByteArray()
-
-
-func _on_browse_make_directory(name: Variant, parent: String) -> void:
-	pass # Replace with function body.
-
-
-func _on_browse_node_info_received(node_dict: Dictionary) -> void:
-	pass # Replace with function body.
-
-
-func _on_browse_remove_node(id: String) -> void:
-	pass # Replace with function body.
-
-
-func _on_browse_upload_data(file_name: String, file_data: PackedByteArray, parent: String) -> void:
-	pass # Replace with function body.

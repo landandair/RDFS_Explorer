@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://c3ijtxnwtghp"]
 
 [ext_resource type="Script" uid="uid://qte757dh6tta" path="res://Scripts/main.gd" id="1_cgmvo"]
-[ext_resource type="PackedScene" uid="uid://77ril0knxcm8" path="res://Scenes/browse.tscn" id="1_sjmnu"]
-[ext_resource type="Script" uid="uid://ymtb6cnrh0wb" path="res://Scripts/connection_manager.gd" id="2_vh8u0"]
+[ext_resource type="PackedScene" uid="uid://dmuvapf4fm582" path="res://Scenes/main_screen.tscn" id="2_cgmvo"]
+[ext_resource type="PackedScene" uid="uid://unuj7o6vr4ws" path="res://Scenes/initial_settings.tscn" id="2_vh8u0"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -13,29 +13,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cgmvo")
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="Initial_settings" parent="." instance=ExtResource("2_vh8u0")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-current_tab = 0
-script = ExtResource("2_vh8u0")
 
-[node name="Browse" parent="TabContainer" instance=ExtResource("1_sjmnu")]
-layout_mode = 2
+[node name="TabContainer" parent="." instance=ExtResource("2_cgmvo")]
+visible = false
+layout_mode = 1
 
-[node name="FileDialog" type="FileDialog" parent="TabContainer"]
-access = 2
-
-[connection signal="node_info_received" from="TabContainer" to="TabContainer/Browse" method="_on_node_info_received"]
-[connection signal="source_upate" from="TabContainer" to="TabContainer/Browse" method="_on_source_upate"]
-[connection signal="get_file" from="TabContainer/Browse" to="TabContainer" method="get_file"]
-[connection signal="get_info" from="TabContainer/Browse" to="TabContainer" method="get_info"]
-[connection signal="get_root" from="TabContainer/Browse" to="TabContainer" method="get_root"]
-[connection signal="get_source" from="TabContainer/Browse" to="TabContainer" method="get_source"]
-[connection signal="make_directory" from="TabContainer/Browse" to="TabContainer" method="make_directory"]
-[connection signal="remove_node" from="TabContainer/Browse" to="TabContainer" method="remove_node"]
-[connection signal="upload_data" from="TabContainer/Browse" to="TabContainer" method="upload_data"]
-[connection signal="file_selected" from="TabContainer/FileDialog" to="TabContainer" method="_on_file_dialog_file_selected"]
+[connection signal="connect" from="Initial_settings" to="." method="_on_initial_settings_connect"]
