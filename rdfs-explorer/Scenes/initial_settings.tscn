@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://unuj7o6vr4ws"]
+
+[ext_resource type="Script" uid="uid://ciwrm36fvhk1o" path="res://Scripts/initial_settings.gd" id="1_6osom"]
+[ext_resource type="Texture2D" uid="uid://dqceglxpbfork" path="res://icon.svg" id="2_le2y8"]
+
+[node name="Initial_settings" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6osom")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_le2y8")
+expand_mode = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ip" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+placeholder_text = "IP Adress"
+alignment = 1
+
+[node name="port" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+placeholder_text = "Port"
+alignment = 1
+
+[node name="connect" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Connect"
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/ip" to="." method="_on_ip_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/ip" to="." method="_on_text_submitted"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/port" to="." method="_on_port_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/port" to="." method="_on_text_submitted"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/connect" to="." method="_on_connect_pressed"]

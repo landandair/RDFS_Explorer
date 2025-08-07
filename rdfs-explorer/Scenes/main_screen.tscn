@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmuvapf4fm582"]
+
+[ext_resource type="Script" uid="uid://ymtb6cnrh0wb" path="res://Scripts/connection_manager.gd" id="1_wi85j"]
+[ext_resource type="PackedScene" uid="uid://77ril0knxcm8" path="res://Scenes/browse.tscn" id="2_y1wm0"]
+[ext_resource type="PackedScene" uid="uid://bsu6x8dc6vcha" path="res://Scenes/status.tscn" id="3_qm5cq"]
+
+[node name="TabContainer" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+script = ExtResource("1_wi85j")
+
+[node name="Browse" parent="." instance=ExtResource("2_y1wm0")]
+layout_mode = 2
+
+[node name="Status" parent="." instance=ExtResource("3_qm5cq")]
+visible = false
+layout_mode = 2
+
+[node name="FileDialog" type="FileDialog" parent="."]
+auto_translate_mode = 1
+access = 2
+
+[connection signal="node_info_received" from="." to="Browse" method="_on_node_info_received"]
+[connection signal="source_upate" from="." to="Browse" method="_on_source_upate"]
+[connection signal="status_update" from="." to="Status" method="_status_update"]
+[connection signal="get_file" from="Browse" to="." method="get_file"]
+[connection signal="get_info" from="Browse" to="." method="get_info"]
+[connection signal="get_root" from="Browse" to="." method="get_root"]
+[connection signal="get_source" from="Browse" to="." method="get_source"]
+[connection signal="make_directory" from="Browse" to="." method="make_directory"]
+[connection signal="reload" from="Browse" to="." method="reload"]
+[connection signal="remove_node" from="Browse" to="." method="remove_node"]
+[connection signal="upload_data" from="Browse" to="." method="upload_data"]
+[connection signal="get_status" from="Status" to="." method="get_status"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
