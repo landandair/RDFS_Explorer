@@ -13,6 +13,7 @@ signal status_update(status_dict: Dictionary)
 signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
+var last_info_req = ''
 
 func http_connect(ip: String, port: int) -> bool:
 	if ip:
@@ -46,6 +47,7 @@ func get_root() -> void:
 
 # Get info about a node from the server in json format
 func get_info(node_id: String) -> void:
+	last_info_req = node_id
 	if not node_id:
 		node_id = 'root'
 	var res = self.make_req('/getNode/{node_id}'.format({"node_id": node_id}))
@@ -56,6 +58,9 @@ func get_info(node_id: String) -> void:
 		if headers.get('response_code', HTTPClient.RESPONSE_GONE) == HTTPClient.RESPONSE_OK:
 			var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
 			node_info_received.emit(out)
+
+func reload() -> void:
+	get_info(last_info_req)
 
 # Get source information about local server to know which nodes are ours
 func get_source() -> void:

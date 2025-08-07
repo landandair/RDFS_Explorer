@@ -3,8 +3,8 @@ extends CenterContainer
 @export var ip = ''
 @export var port = 8000
 
-@onready var port_box = $HBoxContainer/port
-@onready var ip_box = $HBoxContainer/ip
+@onready var port_box = $VBoxContainer/HBoxContainer/port
+@onready var ip_box = $VBoxContainer/HBoxContainer/ip
 
 
 signal connect(ip: String, port: int)
@@ -25,5 +25,5 @@ func _on_connect_pressed() -> void:
 	connect.emit(ip, port)
 
 
-func _on_text_submitted(new_text: String) -> void:
+func _on_text_submitted(_new_text: String) -> void:
 	connect.emit(ip, port)

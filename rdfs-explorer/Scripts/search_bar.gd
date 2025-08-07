@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-signal get_info(node_id: String)
+signal reload()
 
 func _on_button_pressed() -> void:
-	get_info.emit('')
+	reload.emit()

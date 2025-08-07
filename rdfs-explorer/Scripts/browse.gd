@@ -8,6 +8,7 @@ signal node_info_received(node_dict: Dictionary)
 # For passing to network connection
 signal get_root()
 signal get_info(node_id: String)
+signal reload()
 signal get_source()
 signal get_file(node_id: String)
 signal upload_data(file_name: String, file_data: PackedByteArray, parent: String)
@@ -19,6 +20,9 @@ func _get_root():
 
 func _get_info(node_id: String):
 	get_info.emit(node_id)
+
+func _reload():
+	reload.emit()
 
 func _get_source():
 	get_source.emit()

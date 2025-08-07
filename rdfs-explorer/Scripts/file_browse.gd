@@ -10,8 +10,13 @@ signal remove_node(id: String)
 
 var current_node_dict = {}
 var tree_item_dict = {}
+var hovered_item = null
+
 var download = preload("res://icon.svg")
 @onready var tree = $Tree
+@onready var menu = $Context_menu
+@onready var new_folder = $new_folder
+@onready var confirm_delete = $confirm_delete
 
 func _ready() -> void:
 	get_viewport().files_dropped.connect(on_files_dropped)
@@ -76,7 +81,7 @@ func _on_tree_item_selected() -> void:
 		var node_dict = current_node_dict[node_hash]
 
 func on_files_dropped(files):
-	var hovered_item = tree.get_item_at_position(get_local_mouse_position())
+	hovered_item = tree.get_item_at_position(get_local_mouse_position())
 	if not hovered_item:
 		hovered_item = tree.get_selected()
 	if hovered_item:
@@ -87,6 +92,40 @@ func on_files_dropped(files):
 			if type == 0 or type == 2:  # Source or dir
 				for path in files:
 					var bytes = FileAccess.get_file_as_bytes(path)
-					print(len(bytes))
 					if bytes:
 						upload_data.emit(path.get_file(), bytes, node_hash)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		hovered_item = tree.get_item_at_position(get_local_mouse_position())
+		if not hovered_item:
+			hovered_item = tree.get_selected()
+		if hovered_item:
+			menu.show()
+			menu.position = get_global_mouse_position()
+
+func _on_context_menu_index_pressed(index: int) -> void:
+	match index:
+		0: # cancel
+			pass
+		1: # New folder
+			print(hovered_item)
+			print('New folder')
+			new_folder.size = Vector2i(130, 100)
+			new_folder.show()
+			new_folder.parent = tree_item_dict[hovered_item]
+			new_folder.position = get_global_mouse_position()
+			print(new_folder.size)
+		2: # Delete
+			var removal_hash = tree_item_dict[hovered_item]
+			confirm_delete.node_hash = removal_hash
+			confirm_delete.show()
+			
+
+
+func _on_new_folder_name_submitted(folder_name: String, parent: String) -> void:
+	make_directory.emit(folder_name, parent)
+
+
+func _on_confirm_delete_confirm_deleted(node_hash: String) -> void:
+	remove_node.emit(node_hash)
