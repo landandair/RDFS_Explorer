@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=52 format=3 uid="uid://b3klx57slj0l3"]
+[gd_resource type="Theme" load_steps=54 format=3 uid="uid://b3klx57slj0l3"]
 
 [ext_resource type="FontFile" uid="uid://i1eetfry6s4h" path="res://themes/soft_retro/Righteous/Righteous-Regular.ttf" id="1_lopid"]
 [ext_resource type="Texture2D" uid="uid://udawlj7nryla" path="res://themes/soft_retro/art/checked.svg" id="2_k0c1y"]
@@ -16,6 +16,8 @@ border_width_bottom = 2
 border_color = Color(1, 0.933333, 0.8, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lopid"]
 
@@ -28,6 +30,8 @@ border_width_bottom = 2
 border_color = Color(1, 0.933333, 0.8, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 expand_margin_left = 5.0
 expand_margin_top = 2.0
 expand_margin_right = 5.0
@@ -41,6 +45,8 @@ border_width_bottom = 2
 border_color = Color(1, 0.933333, 0.8, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 expand_margin_left = 5.0
 expand_margin_top = 2.0
 expand_margin_right = 5.0
@@ -54,6 +60,8 @@ border_width_bottom = 2
 border_color = Color(1, 0.933333, 0.8, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 expand_margin_left = 5.0
 expand_margin_right = 5.0
 
@@ -122,11 +130,15 @@ content_margin_right = 10.0
 bg_color = Color(0.0823529, 0.470588, 0.54902, 0.784314)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41273"]
 bg_color = Color(0.0823529, 0.470588, 0.54902, 0.392157)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uaw8g"]
 bg_color = Color(0.27451, 0.258824, 0.368627, 1)
@@ -138,15 +150,31 @@ border_color = Color(1, 0.933333, 0.8, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6vxk0"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hbuoo"]
 bg_color = Color(0.0823529, 0.470588, 0.54902, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fmcpx"]
 bg_color = Color(1, 0.411765, 0.45098, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnlxr"]
 bg_color = Color(0.27451, 0.258824, 0.368627, 1)
@@ -198,6 +226,13 @@ content_margin_right = 10.0
 bg_color = Color(0.0823529, 0.470588, 0.54902, 0.784314)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y537b"]
+bg_color = Color(0.335663, 0.317743, 0.444458, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y214y"]
 bg_color = Color(1, 0.933333, 0.8, 1)
@@ -303,6 +338,7 @@ LineEdit/styles/focus = SubResource("StyleBoxEmpty_b3cdw")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_rga2m")
 LineEdit/styles/read_only = SubResource("StyleBoxFlat_41273")
 Panel/styles/panel = SubResource("StyleBoxFlat_uaw8g")
+PopupDialog/styles/panel = SubResource("StyleBoxFlat_6vxk0")
 ProgressBar/colors/font_color = Color(1, 0.933333, 0.8, 1)
 ProgressBar/fonts/font = ExtResource("1_lopid")
 ProgressBar/styles/background = SubResource("StyleBoxFlat_hbuoo")
@@ -329,6 +365,15 @@ TextEdit/colors/selection_color = Color(1, 0.690196, 0.639216, 1)
 TextEdit/fonts/font = ExtResource("1_lopid")
 TextEdit/styles/focus = SubResource("StyleBoxEmpty_l34ym")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_7o6pk")
+Tree/colors/children_hl_line_color = Color(0.87451, 0.87451, 0.87451, 1)
+Tree/colors/font_color = Color(0.87451, 0.87451, 0.87451, 1)
+Tree/colors/parent_hl_line_color = Color(0.87451, 0.87451, 0.87451, 1)
+Tree/colors/relationship_line_color = Color(0.87451, 0.87451, 0.87451, 1)
+Tree/constants/draw_relationship_lines = 1
+Tree/font_sizes/font_size = 18
+Tree/fonts/font = ExtResource("1_lopid")
+Tree/fonts/title_button_font = ExtResource("1_lopid")
+Tree/styles/panel = SubResource("StyleBoxFlat_y537b")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_y214y")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_h653x")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_erami")
@@ -339,3 +384,4 @@ VSlider/icons/grabber = ExtResource("6_cwkfx")
 VSlider/styles/grabber_area = SubResource("StyleBoxFlat_g2lif")
 VSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_b3cdw")
 VSlider/styles/slider = SubResource("StyleBoxFlat_l34ym")
+Window/fonts/title_font = ExtResource("1_lopid")
