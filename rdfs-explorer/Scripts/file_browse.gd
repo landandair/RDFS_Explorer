@@ -109,13 +109,9 @@ func _on_context_menu_index_pressed(index: int) -> void:
 		0: # cancel
 			pass
 		1: # New folder
-			print(hovered_item)
-			print('New folder')
-			new_folder.size = Vector2i(130, 100)
 			new_folder.show()
 			new_folder.parent = tree_item_dict[hovered_item]
 			new_folder.position = get_global_mouse_position()
-			print(new_folder.size)
 		2: # Delete
 			var removal_hash = tree_item_dict[hovered_item]
 			confirm_delete.node_hash = removal_hash

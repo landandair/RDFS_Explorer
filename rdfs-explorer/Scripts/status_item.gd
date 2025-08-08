@@ -1,4 +1,5 @@
 extends HBoxContainer
+class_name StatusItem
 
 signal cancel_toggled(hash: String)
 
@@ -13,6 +14,7 @@ signal cancel_toggled(hash: String)
 
 
 func _ready() -> void:
+	print(progress)
 	Name.text = node_name
 	Name.tooltip_text = node_hash
 	Status.text = status

@@ -44,3 +44,7 @@ func _on_node_info_received(node_dict: Dictionary) -> void:
 
 func _on_source_upate(source: String) -> void:
 	source_upate.emit(source)
+
+func _on_visibility_changed() -> void:
+	if self.is_visible_in_tree():
+		_get_info('')

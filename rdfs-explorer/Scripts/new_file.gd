@@ -3,6 +3,7 @@ extends PopupPanel
 signal name_submitted(name: String, parent: String)
 var folder_name := ""
 var parent := ""
+@onready var line_edit = $VBoxContainer/LineEdit
 
 func _on_line_edit_text_changed(new_text: String) -> void:
 	folder_name = new_text
@@ -27,5 +28,6 @@ func _submit_folder() -> void:
 
 func _reset_self() -> void:
 	folder_name = ""
+	line_edit.text = folder_name
 	
 	self.hide()

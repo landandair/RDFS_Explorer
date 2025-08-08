@@ -74,7 +74,6 @@ item_2/text = "Delete File"
 item_2/id = 1
 
 [node name="new_folder" parent="file_view/file_browse" instance=ExtResource("5_img7u")]
-size = Vector2i(130, 308)
 visible = false
 
 [node name="confirm_delete" parent="file_view/file_browse" instance=ExtResource("6_a4nd2")]
@@ -87,6 +86,7 @@ script = ExtResource("7_k047x")
 [connection signal="get_info" from="Source tab" to="." method="_get_info"]
 [connection signal="get_source" from="Source tab" to="." method="_get_source"]
 [connection signal="reload" from="file_view/reload_button" to="." method="_reload"]
+[connection signal="reload" from="file_view/reload_button" to="Source tab" method="_on_reload_button_reload"]
 [connection signal="pressed" from="file_view/reload_button/Button" to="file_view/reload_button" method="_on_button_pressed"]
 [connection signal="get_file" from="file_view/file_browse" to="." method="_get_file"]
 [connection signal="get_info" from="file_view/file_browse" to="." method="_get_info"]
@@ -97,4 +97,5 @@ script = ExtResource("7_k047x")
 [connection signal="item_activated" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_activated"]
 [connection signal="item_selected" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_selected"]
 [connection signal="index_pressed" from="file_view/file_browse/Context_menu" to="file_view/file_browse" method="_on_context_menu_index_pressed"]
+[connection signal="name_submitted" from="file_view/file_browse/new_folder" to="file_view/file_browse" method="_on_new_folder_name_submitted"]
 [connection signal="confirm_deleted" from="file_view/file_browse/confirm_delete" to="file_view/file_browse" method="_on_confirm_delete_confirm_deleted"]

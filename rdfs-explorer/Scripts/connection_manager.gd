@@ -34,7 +34,7 @@ func http_connect(ip: String, port: int) -> bool:
 
 func _process(_delta: float) -> void:
 	http.poll()
-	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.METHOD_DELETE:
+	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.STATUS_CANT_CONNECT:
 		http.connect_to_host(host, port)
 
 # Request root node json data
