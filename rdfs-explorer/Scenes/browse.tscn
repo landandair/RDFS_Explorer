@@ -69,7 +69,7 @@ hide_root = true
 
 [node name="Context_menu" type="PopupMenu" parent="file_view/file_browse"]
 initial_position = 1
-size = Vector2i(116, 100)
+size = Vector2i(86, 75)
 theme = ExtResource("5_icjlo")
 theme_override_fonts/font = ExtResource("6_pchka")
 theme_override_styles/panel = SubResource("StyleBoxFlat_pchka")
@@ -82,9 +82,11 @@ item_2/text = "Delete File"
 item_2/id = 1
 
 [node name="new_folder" parent="file_view/file_browse" instance=ExtResource("5_img7u")]
+size = Vector2i(121, 85)
 visible = false
 
 [node name="confirm_delete" parent="file_view/file_browse" instance=ExtResource("6_a4nd2")]
+size = Vector2i(215, 60)
 visible = false
 script = ExtResource("7_k047x")
 
