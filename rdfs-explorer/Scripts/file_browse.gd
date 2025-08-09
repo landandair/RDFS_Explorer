@@ -12,7 +12,12 @@ var current_node_dict = {}
 var tree_item_dict = {}
 var hovered_item = null
 
-var download = preload("res://icon.svg")
+var download = preload("res://themes/icons/floppy-icon-size_32_grey.png")
+var retrieve = preload("res://themes/icons/file-restore-icon-size_32_grey.png")
+var file_icon = preload("res://themes/icons/file-icon-size_32_grey.png")
+var folder_icon = preload("res://themes/icons/folder-icon-size_32_grey.png")
+var source_icon = preload('res://themes/icons/source-repository-icon-size_32_grey.png')
+
 @onready var tree = $Tree
 @onready var menu = $Context_menu
 @onready var new_folder = $new_folder
@@ -37,15 +42,22 @@ func recursive_tree_maker(parent: TreeItem, nodes):
 			if node.get('parent') not in nodes or (node.get('parent') in tree_item_dict.values() and node_hash not in tree_item_dict.values()):				
 				var item = parent.create_child()
 				tree_item_dict[item] = node_hash
+				var is_stored = node.get('is_stored')
 				item.set_text(0, node.get('name'))
 				match int(node.get('type')):
 					0: # Source
 						item.set_text(1, "Root")
+						item.set_icon(0, source_icon)
 					1: # File
 						item.set_text(1, get_human_readable_size(node.get('size', -1)))
-						item.add_button(1, download)
+						item.set_icon(0, file_icon)
+						if is_stored:
+							item.add_button(1, download)
+						else:
+							item.add_button(1, retrieve)
 					2: # Directory
 						item.set_text(1, "%d item(s)" % len(node.get('children', [])))
+						item.set_icon(0, folder_icon)
 					3: # Chunk
 						item.set_text(1, get_human_readable_size(node.get('size', -1)))
 				recursive_tree_maker(item, node.get('children'))
