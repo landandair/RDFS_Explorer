@@ -1,4 +1,5 @@
 extends HBoxContainer
+class_name StatusItem
 
 signal cancel_toggled(hash: String)
 

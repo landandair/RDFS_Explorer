@@ -12,7 +12,12 @@ var current_node_dict = {}
 var tree_item_dict = {}
 var hovered_item = null
 
-var download = preload("res://icon.svg")
+var download = preload("res://themes/icons/floppy-icon-size_32_grey.png")
+var retrieve = preload("res://themes/icons/file-restore-icon-size_32_grey.png")
+var file_icon = preload("res://themes/icons/file-icon-size_32_grey.png")
+var folder_icon = preload("res://themes/icons/folder-icon-size_32_grey.png")
+var source_icon = preload('res://themes/icons/source-repository-icon-size_32_grey.png')
+
 @onready var tree = $Tree
 @onready var menu = $Context_menu
 @onready var new_folder = $new_folder
@@ -37,15 +42,22 @@ func recursive_tree_maker(parent: TreeItem, nodes):
 			if node.get('parent') not in nodes or (node.get('parent') in tree_item_dict.values() and node_hash not in tree_item_dict.values()):				
 				var item = parent.create_child()
 				tree_item_dict[item] = node_hash
+				var is_stored = node.get('is_stored')
 				item.set_text(0, node.get('name'))
 				match int(node.get('type')):
 					0: # Source
 						item.set_text(1, "Root")
+						item.set_icon(0, source_icon)
 					1: # File
 						item.set_text(1, get_human_readable_size(node.get('size', -1)))
-						item.add_button(1, download)
+						item.set_icon(0, file_icon)
+						if is_stored:
+							item.add_button(1, download)
+						else:
+							item.add_button(1, retrieve)
 					2: # Directory
 						item.set_text(1, "%d item(s)" % len(node.get('children', [])))
+						item.set_icon(0, folder_icon)
 					3: # Chunk
 						item.set_text(1, get_human_readable_size(node.get('size', -1)))
 				recursive_tree_maker(item, node.get('children'))
@@ -109,17 +121,14 @@ func _on_context_menu_index_pressed(index: int) -> void:
 		0: # cancel
 			pass
 		1: # New folder
-			print(hovered_item)
-			print('New folder')
-			new_folder.size = Vector2i(130, 100)
-			new_folder.show()
 			new_folder.parent = tree_item_dict[hovered_item]
-			new_folder.position = get_global_mouse_position()
-			print(new_folder.size)
+			new_folder.show()
+			new_folder.position = menu.position
 		2: # Delete
 			var removal_hash = tree_item_dict[hovered_item]
 			confirm_delete.node_hash = removal_hash
 			confirm_delete.show()
+			confirm_delete.position = menu.position
 			
 
 

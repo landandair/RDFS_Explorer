@@ -6,7 +6,7 @@
 auto_translate_mode = 1
 title = "New File"
 initial_position = 1
-size = Vector2i(117, 101)
+size = Vector2i(121, 101)
 visible = true
 always_on_top = true
 script = ExtResource("1_wta18")
@@ -19,7 +19,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 113.0
+offset_right = 117.0
 offset_bottom = 97.0
 grow_horizontal = 2
 grow_vertical = 2

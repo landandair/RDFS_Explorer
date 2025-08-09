@@ -23,3 +23,13 @@ window/stretch/aspect="expand"
 [dotnet]
 
 project/assembly_name="RDFS Explorer"
+
+[gui]
+
+theme/custom="uid://b3klx57slj0l3"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.0319395, 0.271796, 0.320475, 1)

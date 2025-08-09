@@ -1,12 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://77ril0knxcm8"]
+[gd_scene load_steps=11 format=3 uid="uid://77ril0knxcm8"]
 
 [ext_resource type="Script" uid="uid://h68m3o2t8t6q" path="res://Scripts/browse.gd" id="1_tife8"]
 [ext_resource type="Script" uid="uid://c3avuuyysuj56" path="res://Scripts/source_tab.gd" id="2_onr6c"]
 [ext_resource type="Script" uid="uid://comi6n5ead8cb" path="res://Scripts/search_bar.gd" id="4_img7u"]
 [ext_resource type="Script" uid="uid://bqg1c8yqibqx6" path="res://Scripts/file_browse.gd" id="5_a4nd2"]
+[ext_resource type="Theme" uid="uid://b3klx57slj0l3" path="res://themes/soft_retro/soft_retro.tres" id="5_icjlo"]
 [ext_resource type="PackedScene" uid="uid://c4fcguqhj8lvf" path="res://Scenes/new_folder.tscn" id="5_img7u"]
 [ext_resource type="PackedScene" uid="uid://ys62b2ifjqqu" path="res://Scenes/confirm_delete.tscn" id="6_a4nd2"]
+[ext_resource type="FontFile" uid="uid://i1eetfry6s4h" path="res://themes/soft_retro/Righteous/Righteous-Regular.ttf" id="6_pchka"]
 [ext_resource type="Script" uid="uid://d1r4p5jc2xtwe" path="res://Scripts/confirm_delete.gd" id="7_k047x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pchka"]
+bg_color = Color(0.101961, 0.101961, 0.101961, 0.6)
 
 [node name="Browse" type="HSplitContainer"]
 anchors_preset = 15
@@ -33,6 +38,9 @@ script = ExtResource("2_onr6c")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Timer" type="Timer" parent="Source tab"]
+autostart = true
 
 [node name="file_view" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -64,7 +72,10 @@ hide_root = true
 
 [node name="Context_menu" type="PopupMenu" parent="file_view/file_browse"]
 initial_position = 1
-size = Vector2i(116, 100)
+size = Vector2i(86, 75)
+theme = ExtResource("5_icjlo")
+theme_override_fonts/font = ExtResource("6_pchka")
+theme_override_styles/panel = SubResource("StyleBoxFlat_pchka")
 item_count = 3
 item_0/text = "Cancel"
 item_0/id = 2
@@ -74,7 +85,7 @@ item_2/text = "Delete File"
 item_2/id = 1
 
 [node name="new_folder" parent="file_view/file_browse" instance=ExtResource("5_img7u")]
-size = Vector2i(130, 308)
+size = Vector2i(121, 85)
 visible = false
 
 [node name="confirm_delete" parent="file_view/file_browse" instance=ExtResource("6_a4nd2")]
@@ -86,7 +97,9 @@ script = ExtResource("7_k047x")
 [connection signal="source_upate" from="." to="Source tab" method="_on_source_upate"]
 [connection signal="get_info" from="Source tab" to="." method="_get_info"]
 [connection signal="get_source" from="Source tab" to="." method="_get_source"]
+[connection signal="timeout" from="Source tab/Timer" to="Source tab" method="_on_timer_timeout"]
 [connection signal="reload" from="file_view/reload_button" to="." method="_reload"]
+[connection signal="reload" from="file_view/reload_button" to="Source tab" method="_on_reload_button_reload"]
 [connection signal="pressed" from="file_view/reload_button/Button" to="file_view/reload_button" method="_on_button_pressed"]
 [connection signal="get_file" from="file_view/file_browse" to="." method="_get_file"]
 [connection signal="get_info" from="file_view/file_browse" to="." method="_get_info"]
@@ -97,4 +110,5 @@ script = ExtResource("7_k047x")
 [connection signal="item_activated" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_activated"]
 [connection signal="item_selected" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_selected"]
 [connection signal="index_pressed" from="file_view/file_browse/Context_menu" to="file_view/file_browse" method="_on_context_menu_index_pressed"]
+[connection signal="name_submitted" from="file_view/file_browse/new_folder" to="file_view/file_browse" method="_on_new_folder_name_submitted"]
 [connection signal="confirm_deleted" from="file_view/file_browse/confirm_delete" to="file_view/file_browse" method="_on_confirm_delete_confirm_deleted"]

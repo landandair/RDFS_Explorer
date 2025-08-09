@@ -35,5 +35,6 @@ access = 2
 [connection signal="reload" from="Browse" to="." method="reload"]
 [connection signal="remove_node" from="Browse" to="." method="remove_node"]
 [connection signal="upload_data" from="Browse" to="." method="upload_data"]
+[connection signal="visibility_changed" from="Browse" to="Browse" method="_on_visibility_changed"]
 [connection signal="get_status" from="Status" to="." method="get_status"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

@@ -27,14 +27,13 @@ func http_connect(ip: String, port: int) -> bool:
 			await get_tree().process_frame
 			
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
-		get_info('')
 		self.show()
 		return true
 	return false
 
 func _process(_delta: float) -> void:
 	http.poll()
-	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.METHOD_DELETE:
+	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.STATUS_CANT_CONNECT:
 		http.connect_to_host(host, port)
 
 # Request root node json data
