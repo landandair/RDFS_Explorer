@@ -11,10 +11,10 @@ var our_source = ''
 
 func _ready() -> void:
 	get_source.emit()
-	get_info.emit('')
 
 # We receive our source hash so we know what to add files under
 func _on_source_upate(source: String) -> void:
+	print(our_source)
 	our_source = source
 
 
@@ -64,3 +64,7 @@ func source_entry_compare(a: Node, b: Node) -> bool:
 		return false
 	else:
 		return a.node_name.naturalnocasecmp_to(b.node_name) < 0
+
+func _on_timer_timeout() -> void:
+	if not our_source:
+		get_source.emit()

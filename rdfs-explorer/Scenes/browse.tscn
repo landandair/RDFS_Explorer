@@ -39,6 +39,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Timer" type="Timer" parent="Source tab"]
+autostart = true
+
 [node name="file_view" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -94,6 +97,7 @@ script = ExtResource("7_k047x")
 [connection signal="source_upate" from="." to="Source tab" method="_on_source_upate"]
 [connection signal="get_info" from="Source tab" to="." method="_get_info"]
 [connection signal="get_source" from="Source tab" to="." method="_get_source"]
+[connection signal="timeout" from="Source tab/Timer" to="Source tab" method="_on_timer_timeout"]
 [connection signal="reload" from="file_view/reload_button" to="." method="_reload"]
 [connection signal="reload" from="file_view/reload_button" to="Source tab" method="_on_reload_button_reload"]
 [connection signal="pressed" from="file_view/reload_button/Button" to="file_view/reload_button" method="_on_button_pressed"]
