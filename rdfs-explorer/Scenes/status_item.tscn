@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://bxvbq70pidogk" path="res://Scripts/status_item.gd" id="1_pim8o"]
 
 [node name="Status_Item" type="HBoxContainer"]
+offset_right = 898.0
+offset_bottom = 25.0
+size_flags_horizontal = 3
 script = ExtResource("1_pim8o")
 
 [node name="Status" type="RichTextLabel" parent="."]

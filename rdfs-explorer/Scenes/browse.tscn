@@ -56,9 +56,6 @@ script = ExtResource("4_img7u")
 layout_mode = 2
 text = "Reload"
 
-[node name="HSeparator" type="HSeparator" parent="file_view"]
-layout_mode = 2
-
 [node name="file_browse" type="HBoxContainer" parent="file_view"]
 layout_mode = 2
 size_flags_vertical = 3
