@@ -22,6 +22,7 @@ size_flags_vertical = 3
 
 [node name="Status_Block" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Reload" to="." method="_on_reload_pressed"]
