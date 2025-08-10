@@ -4,7 +4,7 @@ signal get_status()
 signal cancel_request(hash: String)
 
 var status_item = preload("res://Scenes/status_item.tscn")
-@onready var status_block = $Status_Block
+@onready var status_block = $ScrollContainer/Status_Block
 
 func _on_reload_pressed() -> void:
 	get_status.emit()

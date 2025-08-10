@@ -53,7 +53,6 @@ func get_info(node_id: String) -> void:
 	if res == OK:
 		var headers = await self.get_headers()
 		var bin = await self.get_response_body()
-		print(headers)
 		if headers.get('response_code', HTTPClient.RESPONSE_GONE) == HTTPClient.RESPONSE_OK:
 			var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
 			node_info_received.emit(out)

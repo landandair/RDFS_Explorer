@@ -1,11 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bsu6x8dc6vcha"]
+[gd_scene load_steps=2 format=3 uid="uid://bsu6x8dc6vcha"]
 
 [ext_resource type="Script" uid="uid://1wm36s8r1ns" path="res://Scripts/status.gd" id="1_x4d6w"]
-[ext_resource type="PackedScene" uid="uid://cc6gwr5gpggvs" path="res://Scenes/status_item.tscn" id="2_eey5p"]
 
 [node name="Status" type="VBoxContainer"]
 offset_right = 301.0
-offset_bottom = 39.0
+offset_bottom = 142.0
 size_flags_horizontal = 6
 script = ExtResource("1_x4d6w")
 metadata/_tab_index = 1
@@ -17,10 +16,11 @@ text = "Reload"
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
 
-[node name="Status_Block" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="Status_Item" parent="Status_Block" instance=ExtResource("2_eey5p")]
+[node name="Status_Block" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
