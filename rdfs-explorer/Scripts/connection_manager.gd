@@ -54,8 +54,10 @@ func get_info(node_id: String) -> void:
 		var headers = await self.get_headers()
 		var bin = await self.get_response_body()
 		if headers.get('response_code', HTTPClient.RESPONSE_GONE) == HTTPClient.RESPONSE_OK:
-			var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
-			node_info_received.emit(out)
+			var json_str = JSON.parse_string(bin.get_string_from_utf8())
+			if json_str:
+				var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
+				node_info_received.emit(out)
 
 func reload() -> void:
 	get_info(last_info_req)
@@ -75,8 +77,10 @@ func get_status() -> void:
 	if res == OK:
 		await self.get_headers()
 		var bin = await self.get_response_body()
-		var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
-		status_update.emit(out)
+		var json_str = JSON.parse_string(bin.get_string_from_utf8())
+		if json_str or true:
+			var out = Dictionary(json_str)
+			status_update.emit(out)
 
 # Get file from server make a prompt to save it
 func get_file(node_id: String) -> void:
