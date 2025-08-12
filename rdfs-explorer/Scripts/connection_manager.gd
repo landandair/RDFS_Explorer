@@ -14,6 +14,7 @@ signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
 var last_info_req = ''
+var is_ready = true
 
 func http_connect(ip: String, port: int) -> bool:
 	if ip:
@@ -33,6 +34,9 @@ func http_connect(ip: String, port: int) -> bool:
 
 func _process(_delta: float) -> void:
 	http.poll()
+	check_status()
+
+func check_status():
 	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.STATUS_CANT_CONNECT:
 		http.connect_to_host(host, port)
 
@@ -100,6 +104,7 @@ func get_file(node_id: String) -> void:
 # Make an http form and send it to the http peer for upload for uploading a file
 func upload_data(file_name: String, file_data: PackedByteArray, parent: String) -> void:
 	# Load the buffer into a form data
+	print(file_name)
 	var bound_head = self.make_multipart_header()
 	var boundary = bound_head[0]
 	var headers = bound_head[1]
@@ -159,11 +164,15 @@ func remove_node(id: String) -> void:
 ## HELPER FUNCTIONS
 
 func make_req(url, header=['Content-type: json'], body='') -> Error:
+	http.poll()
+	check_status()
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
 		return http.request(HTTPClient.METHOD_GET, url, header, body)
 	return ERR_CANT_CONNECT
 
 func make_post(url, header=['Content-type: json'], body='') -> Error:
+	http.poll()
+	check_status()
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
 		return http.request(HTTPClient.METHOD_POST, url, header, body)
 	return ERR_CANT_CONNECT
