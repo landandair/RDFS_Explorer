@@ -13,13 +13,13 @@ signal status_update(status_dict: Dictionary)
 signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
-var last_info_req = ''
+var last_info_req = []
 var is_ready = true
 
-func http_connect(ip: String, port: int) -> bool:
+func http_connect(ip: String, port_num: int) -> bool:
 	if ip:
 		host = ip
-	var err = http.connect_to_host(host, port)
+	var err = http.connect_to_host(host, port_num)
 	if err == OK:
 		print('Connected to host')
 		while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
@@ -49,8 +49,11 @@ func get_root() -> void:
 		print(bin.get_string_from_ascii())
 
 # Get info about a node from the server in json format
-func get_info(node_id: String) -> void:
-	last_info_req = node_id
+func get_info(node_id: String, save_history=true) -> void:
+	if save_history:
+		last_info_req.append(node_id)
+	while len(last_info_req) > 10:
+		last_info_req.pop_front()
 	if not node_id:
 		node_id = 'root'
 	var res = self.make_req('/getNode/{node_id}'.format({"node_id": node_id}))
@@ -64,7 +67,7 @@ func get_info(node_id: String) -> void:
 				node_info_received.emit(out)
 
 func reload() -> void:
-	get_info(last_info_req)
+	get_info(last_info_req.back(), false)
 
 # Get source information about local server to know which nodes are ours
 func get_source() -> void:
@@ -161,6 +164,17 @@ func remove_node(id: String) -> void:
 		var bin = await self.get_response_body()
 		print(bin.get_string_from_ascii())
 
+func _on_browse_back_button_pressed() -> void:
+	last_info_req.pop_back()
+	get_info(last_info_req.back(), false)
+	if len(last_info_req) < 2:
+		last_info_req.resize(5)
+		last_info_req.fill('')
+
+
+func _on_status_cancel_request(hash_str: String) -> void:
+	print('TODO: Add status cancel request to the API')
+	print('cancelling: ', hash_str)
 ## HELPER FUNCTIONS
 
 func make_req(url, header=['Content-type: json'], body='') -> Error:

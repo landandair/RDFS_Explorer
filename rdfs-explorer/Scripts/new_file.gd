@@ -29,5 +29,8 @@ func _submit_folder() -> void:
 func _reset_self() -> void:
 	folder_name = ""
 	line_edit.text = folder_name
-	
 	self.hide()
+
+func _on_line_edit_visibility_changed() -> void:
+	if line_edit.is_visible_in_tree():
+		line_edit.grab_focus()

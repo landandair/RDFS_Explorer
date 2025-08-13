@@ -3,11 +3,15 @@ extends PopupPanel
 signal confirm_deleted(node_hash: String)
 var node_hash := ""
 
+func _input(_event: InputEvent) -> void:
+	if Input.is_key_pressed(KEY_ENTER):
+		_on_ok_pressed()
+	if Input.is_key_pressed(KEY_ESCAPE):
+		_on_cancel_pressed()
 
 func _on_ok_pressed() -> void:
 	_submit_delete()
 	self.hide()
-
 
 func _on_cancel_pressed() -> void:
 	self.hide()

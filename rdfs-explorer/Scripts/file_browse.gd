@@ -92,9 +92,10 @@ func _on_tree_item_activated() -> void:
 
 # Single click sets the Info bar to show all info
 func _on_tree_item_selected() -> void:
-	var node_hash = tree_item_dict[tree.get_selected()]
-	if node_hash:
-		var node_dict = current_node_dict[node_hash]
+	set_hovered_item(tree.get_selected())
+	#var node_hash = tree_item_dict[tree.get_selected()]
+	#if node_hash:
+		#var node_dict = current_node_dict[node_hash]
 
 func on_files_dropped(files):
 	set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
@@ -102,20 +103,17 @@ func on_files_dropped(files):
 		set_hovered_item(tree.get_selected())
 	if hovered_item:
 		var node_hash = tree_item_dict[hovered_item]
-		if node_hash:
-			var node_dict = current_node_dict[node_hash]
-			var type = int(node_dict.get('type'))
-			if type == 0 or type == 2:  # Source or dir
-				for path in files:
-					file_list.append([path, node_hash])
-				timer.start()
+		if _is_type_dir(hovered_item):
+			for path in files:
+				file_list.append([path, node_hash])
+			timer.start()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+	if event is InputEventMouseButton and event.pressed:
 		set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
 		if not hovered_item:
 			set_hovered_item(tree.get_selected())
-		if hovered_item:
+		if hovered_item and event.button_index == MOUSE_BUTTON_RIGHT:
 			menu.show()
 			menu.position = get_global_mouse_position()
 
@@ -164,7 +162,17 @@ func _on_timer_timeout() -> void:
 
 func set_hovered_item(item):
 	hovered_item = item
-	if hovered_item:
+	if hovered_item and _is_type_dir(hovered_item):
 		show_add_file.emit(true)
 	else:
 		show_add_file.emit(false)
+
+func _is_type_dir(tree_item) -> bool:
+	var node_hash = tree_item_dict[tree_item]
+	if node_hash:
+		var node_dict = current_node_dict[node_hash]
+		var type = int(node_dict.get('type'))
+		if type == 0 or type == 2:  # Source or dir
+			return true
+	return false
+	

@@ -6,7 +6,7 @@
 auto_translate_mode = 1
 title = "New File"
 initial_position = 1
-size = Vector2i(121, 101)
+size = Vector2i(121, 85)
 visible = true
 always_on_top = true
 script = ExtResource("1_wta18")
@@ -20,7 +20,7 @@ anchor_bottom = 0.5
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 117.0
-offset_bottom = 97.0
+offset_bottom = 81.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -37,6 +37,7 @@ layout_mode = 2
 placeholder_text = "Folder Name"
 max_length = 64
 expand_to_text_length = true
+select_all_on_focus = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -54,5 +55,6 @@ text = "Ok"
 
 [connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_line_edit_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer/LineEdit" to="." method="_on_line_edit_text_submitted"]
+[connection signal="visibility_changed" from="VBoxContainer/LineEdit" to="." method="_on_line_edit_visibility_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Ok" to="." method="_on_ok_pressed"]

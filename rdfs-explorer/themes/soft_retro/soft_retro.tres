@@ -314,6 +314,7 @@ CheckButton/styles/hover = SubResource("StyleBoxEmpty_cwkfx")
 CheckButton/styles/hover_pressed = SubResource("StyleBoxEmpty_1b0k0")
 CheckButton/styles/normal = SubResource("StyleBoxEmpty_14r85")
 CheckButton/styles/pressed = SubResource("StyleBoxEmpty_hbuoo")
+HBoxContainer/constants/separation = 8
 HScrollBar/styles/grabber = SubResource("StyleBoxFlat_nas17")
 HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_adq26")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_wjpxi")

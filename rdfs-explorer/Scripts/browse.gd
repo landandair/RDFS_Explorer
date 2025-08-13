@@ -14,6 +14,7 @@ signal get_file(node_id: String)
 signal upload_data(file_name: String, file_data: PackedByteArray, parent: String)
 signal make_directory(name, parent: String)
 signal remove_node(id: String)
+signal back_button_pressed()
 
 func _get_root():
 	get_root.emit()
@@ -48,3 +49,6 @@ func _on_source_upate(source: String) -> void:
 func _on_visibility_changed() -> void:
 	if self.is_visible_in_tree():
 		_get_info('')
+
+func _on_back_pressed() -> void:
+	back_button_pressed.emit()
