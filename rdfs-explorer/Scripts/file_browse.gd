@@ -110,10 +110,10 @@ func on_files_dropped(files):
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
-		if not hovered_item:
-			set_hovered_item(tree.get_selected())
 		if hovered_item and event.button_index == MOUSE_BUTTON_RIGHT:
+			set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
+			if not hovered_item:
+				set_hovered_item(tree.get_selected())
 			menu.show()
 			menu.position = get_global_mouse_position()
 

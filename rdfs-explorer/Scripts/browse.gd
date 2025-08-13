@@ -52,3 +52,7 @@ func _on_visibility_changed() -> void:
 
 func _on_back_pressed() -> void:
 	back_button_pressed.emit()
+
+
+func _on_add_file_pressed() -> void:
+	pass # Replace with function body.
