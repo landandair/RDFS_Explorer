@@ -164,6 +164,7 @@ func remove_node(id: String) -> void:
 		var bin = await self.get_response_body()
 		print(bin.get_string_from_ascii())
 
+# Recall the last button pressed
 func _on_browse_back_button_pressed() -> void:
 	last_info_req.pop_back()
 	get_info(last_info_req.back(), false)
@@ -171,10 +172,14 @@ func _on_browse_back_button_pressed() -> void:
 		last_info_req.resize(5)
 		last_info_req.fill('')
 
-
+# cancel the requested status item
 func _on_status_cancel_request(hash_str: String) -> void:
-	print('TODO: Add status cancel request to the API')
-	print('cancelling: ', hash_str)
+	var res = self.make_req('/cancel/%s' % hash_str)
+	if res == OK:
+		await self.get_headers()
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
 ## HELPER FUNCTIONS
 
 func make_req(url, header=['Content-type: json'], body='') -> Error:
