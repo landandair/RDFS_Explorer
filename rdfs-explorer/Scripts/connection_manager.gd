@@ -13,12 +13,13 @@ signal status_update(status_dict: Dictionary)
 signal node_info_received(node_dict: Dictionary)
 
 var current_file_data = PackedByteArray()
-var last_info_req = ''
+var last_info_req = []
+var is_ready = true
 
-func http_connect(ip: String, port: int) -> bool:
+func http_connect(ip: String, port_num: int) -> bool:
 	if ip:
 		host = ip
-	var err = http.connect_to_host(host, port)
+	var err = http.connect_to_host(host, port_num)
 	if err == OK:
 		print('Connected to host')
 		while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
@@ -33,6 +34,9 @@ func http_connect(ip: String, port: int) -> bool:
 
 func _process(_delta: float) -> void:
 	http.poll()
+	check_status()
+
+func check_status():
 	if http.get_status() == HTTPClient.STATUS_CONNECTION_ERROR or http.get_status() == HTTPClient.STATUS_DISCONNECTED or http.get_status() == HTTPClient.STATUS_CANT_CONNECT:
 		http.connect_to_host(host, port)
 
@@ -45,8 +49,11 @@ func get_root() -> void:
 		print(bin.get_string_from_ascii())
 
 # Get info about a node from the server in json format
-func get_info(node_id: String) -> void:
-	last_info_req = node_id
+func get_info(node_id: String, save_history=true) -> void:
+	if save_history:
+		last_info_req.append(node_id)
+	while len(last_info_req) > 10:
+		last_info_req.pop_front()
 	if not node_id:
 		node_id = 'root'
 	var res = self.make_req('/getNode/{node_id}'.format({"node_id": node_id}))
@@ -54,11 +61,13 @@ func get_info(node_id: String) -> void:
 		var headers = await self.get_headers()
 		var bin = await self.get_response_body()
 		if headers.get('response_code', HTTPClient.RESPONSE_GONE) == HTTPClient.RESPONSE_OK:
-			var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
-			node_info_received.emit(out)
+			var json_str = JSON.parse_string(bin.get_string_from_utf8())
+			if json_str:
+				var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
+				node_info_received.emit(out)
 
 func reload() -> void:
-	get_info(last_info_req)
+	get_info(last_info_req.back(), false)
 
 # Get source information about local server to know which nodes are ours
 func get_source() -> void:
@@ -75,8 +84,10 @@ func get_status() -> void:
 	if res == OK:
 		await self.get_headers()
 		var bin = await self.get_response_body()
-		var out = Dictionary(JSON.parse_string(bin.get_string_from_utf8()))
-		status_update.emit(out)
+		var json_str = JSON.parse_string(bin.get_string_from_utf8())
+		if json_str or true:
+			var out = Dictionary(json_str)
+			status_update.emit(out)
 
 # Get file from server make a prompt to save it
 func get_file(node_id: String) -> void:
@@ -96,6 +107,7 @@ func get_file(node_id: String) -> void:
 # Make an http form and send it to the http peer for upload for uploading a file
 func upload_data(file_name: String, file_data: PackedByteArray, parent: String) -> void:
 	# Load the buffer into a form data
+	print(file_name)
 	var bound_head = self.make_multipart_header()
 	var boundary = bound_head[0]
 	var headers = bound_head[1]
@@ -152,14 +164,34 @@ func remove_node(id: String) -> void:
 		var bin = await self.get_response_body()
 		print(bin.get_string_from_ascii())
 
+# Recall the last button pressed
+func _on_browse_back_button_pressed() -> void:
+	last_info_req.pop_back()
+	get_info(last_info_req.back(), false)
+	if len(last_info_req) < 2:
+		last_info_req.resize(5)
+		last_info_req.fill('')
+
+# cancel the requested status item
+func _on_status_cancel_request(hash_str: String) -> void:
+	var res = self.make_req('/cancel/%s' % hash_str)
+	if res == OK:
+		await self.get_headers()
+		var bin = await self.get_response_body()
+		print(bin.get_string_from_ascii())
+
 ## HELPER FUNCTIONS
 
 func make_req(url, header=['Content-type: json'], body='') -> Error:
+	http.poll()
+	check_status()
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
 		return http.request(HTTPClient.METHOD_GET, url, header, body)
 	return ERR_CANT_CONNECT
 
 func make_post(url, header=['Content-type: json'], body='') -> Error:
+	http.poll()
+	check_status()
 	if http.get_status() == HTTPClient.STATUS_CONNECTED:
 		return http.request(HTTPClient.METHOD_POST, url, header, body)
 	return ERR_CANT_CONNECT

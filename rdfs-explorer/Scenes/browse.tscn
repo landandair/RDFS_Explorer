@@ -50,7 +50,18 @@ size_flags_stretch_ratio = 2.0
 [node name="reload_button" type="HBoxContainer" parent="file_view"]
 layout_mode = 2
 size_flags_horizontal = 8
+theme_override_constants/separation = 15
 script = ExtResource("4_img7u")
+
+[node name="add_file" type="Button" parent="file_view/reload_button"]
+visible = false
+layout_mode = 2
+text = "Add File"
+
+[node name="back" type="Button" parent="file_view/reload_button"]
+layout_mode = 2
+tooltip_text = "back"
+text = " < "
 
 [node name="Button" type="Button" parent="file_view/reload_button"]
 layout_mode = 2
@@ -75,19 +86,27 @@ theme_override_fonts/font = ExtResource("6_pchka")
 theme_override_styles/panel = SubResource("StyleBoxFlat_pchka")
 item_count = 3
 item_0/text = "Cancel"
-item_0/id = 2
+item_0/id = 0
 item_1/text = "New Folder"
-item_1/id = 0
+item_1/id = 1
 item_2/text = "Delete File"
-item_2/id = 1
+item_2/id = 2
 
 [node name="new_folder" parent="file_view/file_browse" instance=ExtResource("5_img7u")]
-size = Vector2i(121, 85)
 visible = false
 
 [node name="confirm_delete" parent="file_view/file_browse" instance=ExtResource("6_a4nd2")]
 visible = false
 script = ExtResource("7_k047x")
+
+[node name="FileDialog" type="FileDialog" parent="file_view/file_browse"]
+title = "Open File(s)"
+ok_button_text = "Open"
+file_mode = 1
+access = 2
+
+[node name="Timer" type="Timer" parent="file_view/file_browse"]
+wait_time = 0.25
 
 [connection signal="node_info_received" from="." to="Source tab" method="_node_info_received"]
 [connection signal="node_info_received" from="." to="file_view/file_browse" method="_on_node_info_received"]
@@ -97,11 +116,14 @@ script = ExtResource("7_k047x")
 [connection signal="timeout" from="Source tab/Timer" to="Source tab" method="_on_timer_timeout"]
 [connection signal="reload" from="file_view/reload_button" to="." method="_reload"]
 [connection signal="reload" from="file_view/reload_button" to="Source tab" method="_on_reload_button_reload"]
+[connection signal="pressed" from="file_view/reload_button/add_file" to="file_view/file_browse" method="_on_add_file_pressed"]
+[connection signal="pressed" from="file_view/reload_button/back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="file_view/reload_button/Button" to="file_view/reload_button" method="_on_button_pressed"]
 [connection signal="get_file" from="file_view/file_browse" to="." method="_get_file"]
 [connection signal="get_info" from="file_view/file_browse" to="." method="_get_info"]
 [connection signal="make_directory" from="file_view/file_browse" to="." method="_make_directory"]
 [connection signal="remove_node" from="file_view/file_browse" to="." method="_remove_node"]
+[connection signal="show_add_file" from="file_view/file_browse" to="file_view/reload_button" method="_on_file_browse_show_add_file"]
 [connection signal="upload_data" from="file_view/file_browse" to="." method="_upload_data"]
 [connection signal="button_clicked" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_button_clicked"]
 [connection signal="item_activated" from="file_view/file_browse/Tree" to="file_view/file_browse" method="_on_tree_item_activated"]
@@ -109,3 +131,6 @@ script = ExtResource("7_k047x")
 [connection signal="index_pressed" from="file_view/file_browse/Context_menu" to="file_view/file_browse" method="_on_context_menu_index_pressed"]
 [connection signal="name_submitted" from="file_view/file_browse/new_folder" to="file_view/file_browse" method="_on_new_folder_name_submitted"]
 [connection signal="confirm_deleted" from="file_view/file_browse/confirm_delete" to="file_view/file_browse" method="_on_confirm_delete_confirm_deleted"]
+[connection signal="file_selected" from="file_view/file_browse/FileDialog" to="file_view/file_browse" method="_on_file_dialog_file_selected"]
+[connection signal="files_selected" from="file_view/file_browse/FileDialog" to="file_view/file_browse" method="on_files_dropped"]
+[connection signal="timeout" from="file_view/file_browse/Timer" to="file_view/file_browse" method="_on_timer_timeout"]

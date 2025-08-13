@@ -21,4 +21,3 @@ func _ready() -> void:
 
 func _on_cancel_pressed() -> void:
 	cancel_toggled.emit(node_hash)
-	print("TODO: ADD CANCEL FEATURE API Call")

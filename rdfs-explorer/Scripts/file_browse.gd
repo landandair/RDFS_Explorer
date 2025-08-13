@@ -7,10 +7,12 @@ signal get_file(node_id: String)
 signal upload_data(file_name: String, file_data: PackedByteArray, parent: String)
 signal make_directory(name, parent: String)
 signal remove_node(id: String)
+signal show_add_file(state: bool)
 
 var current_node_dict = {}
 var tree_item_dict = {}
 var hovered_item = null
+var file_list = Array()
 
 var download = preload("res://themes/icons/floppy-icon-size_32_grey.png")
 var retrieve = preload("res://themes/icons/file-restore-icon-size_32_grey.png")
@@ -22,6 +24,8 @@ var source_icon = preload('res://themes/icons/source-repository-icon-size_32_gre
 @onready var menu = $Context_menu
 @onready var new_folder = $new_folder
 @onready var confirm_delete = $confirm_delete
+@onready var file_dialog = $FileDialog
+@onready var timer = $Timer
 
 func _ready() -> void:
 	get_viewport().files_dropped.connect(on_files_dropped)
@@ -88,31 +92,28 @@ func _on_tree_item_activated() -> void:
 
 # Single click sets the Info bar to show all info
 func _on_tree_item_selected() -> void:
-	var node_hash = tree_item_dict[tree.get_selected()]
-	if node_hash:
-		var node_dict = current_node_dict[node_hash]
+	set_hovered_item(tree.get_selected())
+	#var node_hash = tree_item_dict[tree.get_selected()]
+	#if node_hash:
+		#var node_dict = current_node_dict[node_hash]
 
 func on_files_dropped(files):
-	hovered_item = tree.get_item_at_position(get_local_mouse_position())
+	set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
 	if not hovered_item:
-		hovered_item = tree.get_selected()
+		set_hovered_item(tree.get_selected())
 	if hovered_item:
 		var node_hash = tree_item_dict[hovered_item]
-		if node_hash:
-			var node_dict = current_node_dict[node_hash]
-			var type = int(node_dict.get('type'))
-			if type == 0 or type == 2:  # Source or dir
-				for path in files:
-					var bytes = FileAccess.get_file_as_bytes(path)
-					if bytes:
-						upload_data.emit(path.get_file(), bytes, node_hash)
+		if _is_type_dir(hovered_item):
+			for path in files:
+				file_list.append([path, node_hash])
+			timer.start()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		hovered_item = tree.get_item_at_position(get_local_mouse_position())
-		if not hovered_item:
-			hovered_item = tree.get_selected()
-		if hovered_item:
+	if event is InputEventMouseButton and event.pressed:
+		if hovered_item and event.button_index == MOUSE_BUTTON_RIGHT:
+			set_hovered_item(tree.get_item_at_position(get_local_mouse_position()))
+			if not hovered_item:
+				set_hovered_item(tree.get_selected())
 			menu.show()
 			menu.position = get_global_mouse_position()
 
@@ -138,3 +139,40 @@ func _on_new_folder_name_submitted(folder_name: String, parent: String) -> void:
 
 func _on_confirm_delete_confirm_deleted(node_hash: String) -> void:
 	remove_node.emit(node_hash)
+
+
+func _on_add_file_pressed() -> void:
+	file_dialog.show()
+
+
+func _on_file_dialog_file_selected(path: String) -> void:
+	on_files_dropped([path])
+
+
+func _on_timer_timeout() -> void:
+	if file_list:
+		var path_hash = file_list.pop_front()
+		var path = path_hash.get(0)
+		var node_hash = path_hash.get(1)
+		var bytes = FileAccess.get_file_as_bytes(path)
+		if bytes:
+			upload_data.emit(path.get_file(), bytes, node_hash)
+	else:
+		timer.stop()
+
+func set_hovered_item(item):
+	hovered_item = item
+	if hovered_item and _is_type_dir(hovered_item):
+		show_add_file.emit(true)
+	else:
+		show_add_file.emit(false)
+
+func _is_type_dir(tree_item) -> bool:
+	var node_hash = tree_item_dict[tree_item]
+	if node_hash:
+		var node_dict = current_node_dict[node_hash]
+		var type = int(node_dict.get('type'))
+		if type == 0 or type == 2:  # Source or dir
+			return true
+	return false
+	

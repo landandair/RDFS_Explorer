@@ -34,6 +34,10 @@ func _status_update(status_dict: Dictionary) -> void:
 			status = 'Awaiting Link'
 		node_status.progress = progress*100
 		node_status.node_name = node_name
+		node_status.node_hash = node_hash
 		node_status.status = status
+		node_status.connect('cancel_toggled', cancel_toggled)
 		status_block.add_child(node_status)
-		
+
+func cancel_toggled(hash_str: String):
+	cancel_request.emit(hash_str)
